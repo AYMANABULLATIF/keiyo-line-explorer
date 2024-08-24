@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keiyo Line Explorer</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+</head>
+<body>
+    <div class="container-fluid h-100">
+        <div class="row h-100 no-gutters">
+            <!-- Controls Section -->
+            <div class="col-md-2" id="controls">
+
+       
+                <!-- Start Station Selection -->
+                <div class="mb-2">
+                    <label for="startStation">Start Station:</label>
+                    <select id="startStation" class="form-control"></select>
+                </div>
+
+                <!-- End Station Selection -->
+                <div class="mb-2">
+                    <label for="endStation">End Station:</label>
+                    <select id="endStation" class="form-control"></select>
+                </div>
+                                <!-- Search Input -->
+                                <div class="mb-2">
+                                    <label for="searchInput">Search for:</label>
+                                    <input type="text" id="searchInput" class="form-control" placeholder="e.g. Restaurant, Cafe, Museum">
+                                </div>
+
+                <div class="form-group">
+                    <!-- Search Button -->
+                    <div class="mb-2">
+                        <button onclick="performSearch()" class="btn btn-primary btn-block">Search</button>
+                    </div>
+    
+                    <!-- Maximum Distance Input -->
+                    <div class="mb-2">
+                        <label for="maxDistance">Max Distance (meters):</label>
+                        <input type="number" id="maxDistance" class="form-control" value="1000">
+                    </div>
+    
+                    <!-- Dark Mode Toggle Switch -->
+                    <div>
+                        <label class="switch">
+                            <input type="checkbox" id="darkModeToggle">
+                            <span class="slider round"></span>
+                        </label>
+                        <span>Dark Mode</span>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Main Content Section -->
+            <div class="col-md-10 d-flex justify-content-center align-items-center" id="main-content">
+                <div id="placesList" class="places-list-container">
+                    <h5>Places Found</h5>
+                    <ul class="list-group">
+                        <!-- List items will appear here -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+            <!-- Map Display Section -->
+            <div class="col-md-4" id="map-container">
+                <div id="map" style="height: 100%;"></div>
+            </div>
+        </div>
+       <!-- Side Panel for Place Information -->
+<div id="infoPanel" class="info-panel">
+    <button id="closePanel" class="close-btn">&times;</button>
+    <h2 id="placeName"></h2>
+    <p id="placeCategory"></p>
+    <p id="placeAddress"></p>
+    <p id="placeContact"></p>
+    <p id="placeOpeningHours"></p>
+    <p id="placeRating"></p>
+    <div id="placeReviews"></div>
+    <div id="placePhotos"></div>
+    <p id="placePriceLevel"></p>
+    <p id="placeFeatures"></p>
+    <button id="openInMaps">View on Google Maps</button>
+    
+    <!-- Small map inside the side panel -->
+    <div id="smallMap" style="height: 200px; margin-top: 10px;"></div>
+
+</div>
+
+    </div>
+</div>
+
+<!-- New Google Maps Loader Script -->
+<script>
+    (g => {
+        var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__", m = document, b = window;
+        b = b[c] || (b[c] = {});
+        var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams,
+            u = () => h || (h = new Promise(async (f, n) => {
+                await (a = m.createElement("script"));
+                e.set("libraries", [...r] + "");
+                for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]);
+                e.set("callback", c + ".maps." + q);
+                a.src = `https://maps.${c}apis.com/maps/api/js?` + e;
+                d[q] = f;
+                a.onerror = () => h = n(Error(p + " could not load."));
+                a.nonce = m.querySelector("script[nonce]")?.nonce || "";
+                m.head.append(a);
+            }));
+        d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n))
+    })({
+        key: "API_KEY",       
+        v: "weekly",
+    });
+
+    async function initMap() {
+        await google.maps.importLibrary("maps");
+        await google.maps.importLibrary("places");  // Ensure the places library is loaded
+        await google.maps.importLibrary("geometry"); // Ensure the geometry library is loaded
+        const map = new google.maps.Map(document.getElementById("map"), {
+            center: { lat: 35.681236, lng: 139.767125 }, // Tokyo Station
+            zoom: 15,
+        });
+        console.log('Map initialized:', map);
+        populateStationOptions(); // Populate station options after the map is initialized
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        initMap();
+    });
+</script>
+
+
+
+
+
+
+
+
+<script src="scriptv2.js"></script>
+
+</body>
+</html>
